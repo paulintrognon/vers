@@ -1,5 +1,7 @@
-import Hello from './hello.js';
+import Game from './game.js';
 
-const hello = new Hello();
+const canvas = document.getElementById('game-canvas');
+const context = canvas.getContext('2d');
 
-hello.world();
+const game = Game({ context });
+game.refresh();
