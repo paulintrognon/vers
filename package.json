@@ -4,7 +4,7 @@
   "description": "vers qui se tabassent et qui explosent",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --content-base web/",
+    "start": "webpack-dev-server --inline --content-base web/",
     "build": "webpack"
   },
   "author": "",
