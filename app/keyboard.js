@@ -4,48 +4,56 @@ function create() {
   document.onkeydown = onKeyDown;
   document.onkeyup = onKeyUp;
 
+  const that = {};
   const keyboard = {
-    upPressed: false,
-    downPressed: false,
-    rightPressed: false,
-    leftPressed: false,
+    up: {pressed: false, wasPressed: false},
+    down: {pressed: false, wasPressed: false},
+    right: {pressed: false, wasPressed: false},
+    left: {pressed: false, wasPressed: false},
   };
 
-  return keyboard;
+  that.getKeyboard = getKeyboard;
+  that.sync = sync;
+
+  return that;
 
   // ------------------------------------------------------
 
-  function onKeyDown(e) {
-    e = e || window.event;
+  function getKeyboard() {
+    return keyboard;
+  }
 
+  function correspond(e) {
+    e = e || window.event;
     if (e.keyCode == '38') { // up arrow
-      keyboard.upPressed = true;
+      return 'up';
     }
     else if (e.keyCode == '40') { // down arrow
-      keyboard.downPressed = true;
+      return 'down';
     }
     else if (e.keyCode == '39') { // right arrow
-      keyboard.rightPressed = true;
+      return 'right';
     }
     else if (e.keyCode == '37') { // left arrow
-      keyboard.leftPressed = true;
+      return 'left';
     }
   }
 
-  function onKeyUp(e) {
-    e = e || window.event;
+  function onKeyDown(e) {
+    const key = correspond(e);
+    keyboard[key].pressed = true;
+    keyboard[key].wasPressed = true;
+  }
 
-    if (e.keyCode == '38') { // up arrow
-      keyboard.upPressed = false;
-    }
-    else if (e.keyCode == '40') { // down arrow
-      keyboard.downPressed = false;
-    }
-    else if (e.keyCode == '39') { // right arrow
-      keyboard.rightPressed = false;
-    }
-    else if (e.keyCode == '37') { // left arrow
-      keyboard.leftPressed = false;
-    }
+  function onKeyUp(e) {
+    const key = correspond(e);
+    keyboard[key].pressed = false;
+  }
+
+  function sync() {
+    keyboard.up.wasPressed = keyboard.up.pressed;
+    keyboard.down.wasPressed = keyboard.down.pressed;
+    keyboard.left.wasPressed = keyboard.left.pressed;
+    keyboard.right.wasPressed = keyboard.right.pressed;
   }
 }

@@ -10,7 +10,8 @@ const SIZE = 50;
 function create(specs) {
   const context = specs.context;
   const player = playerFactory();
-  const keyboard = keyboardFactory();
+  const keyboardService = keyboardFactory();
+  const keyboard = keyboardService.getKeyboard();
   const game = {
     players: [player],
   };
@@ -24,32 +25,37 @@ function create(specs) {
 
   function start() {
     window.setInterval(() => {
-      refresh();
+      update();
     }, 30);
   }
 
-  function refresh() {
+  function update() {
     let needRefresh = false;
-    if (keyboard.upPressed) {
+    if (keyboard.up.wasPressed) {
       player.moveUp();
       needRefresh = true;
     }
-    if (keyboard.downPressed) {
+    if (keyboard.down.wasPressed) {
       player.moveDown();
       needRefresh = true;
     }
-    if (keyboard.rightPressed) {
+    if (keyboard.right.wasPressed) {
       player.moveRight();
       needRefresh = true;
     }
-    if (keyboard.leftPressed) {
+    if (keyboard.left.wasPressed) {
       player.moveLeft();
       needRefresh = true;
     }
     if (needRefresh) {
-      clean();
-      drawPlayer();
+      refresh();
     }
+    keyboardService.sync();
+  }
+
+  function refresh() {
+    clean();
+    drawPlayer();
   }
 
   function drawPlayer() {
