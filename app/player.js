@@ -3,20 +3,25 @@ const SIZE_X = 500;
 const SIZE_Y = 300;
 const SIZE = 50;
 
+const receivableInstructions = [
+  'MOVE_UP',
+  'MOVE_DOWN',
+  'MOVE_RIGHT',
+  'MOVE_LEFT',
+];
+
 export default create;
 
 function create() {
-  const position = {}
+  const position = {};
+  const speed = 
   const player = {
     position,
   };
 
   init();
 
-  player.moveUp = moveUp;
-  player.moveDown = moveDown;
-  player.moveLeft = moveLeft;
-  player.moveRight = moveRight;
+  player.process = process;
 
   return player;
 
@@ -25,6 +30,21 @@ function create() {
   function init() {
     position.x = 0;
     position.y = 0;
+  }
+
+  function process(instructions) {
+    if (instructions.moveUp) {
+      moveUp();
+    }
+    if (instructions.moveDown) {
+      moveDown();
+    }
+    if (instructions.moveRight) {
+      moveRight();
+    }
+    if (instructions.moveLeft) {
+      moveLeft();
+    }
   }
 
   function moveUp() {
