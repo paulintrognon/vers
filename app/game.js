@@ -6,7 +6,7 @@ export default create;
 const SIZE_X = 500;
 const SIZE_Y = 300;
 const SIZE = 50;
-const SPEED = 3;
+const SPEED = 5;
 const world = {
   size: {
     x: SIZE_X,

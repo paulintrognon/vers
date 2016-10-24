@@ -38,14 +38,14 @@ function createObject(specs) {
 
     const objectB = checkCollisions(objectA);
 
-    if (!objectB) {
+    if (objectB) {
+      speed.x = bounce(speed.x);
+      speed.y = bounce(speed.y);
+    } else {
       position.x = moveAxis('x');
       position.y = moveAxis('y');
       speed.x = decelerate(speed.x);
       speed.y = decelerate(speed.y);
-    } else {
-      speed.x = 0;
-      speed.y = 0;
     }
   }
 
@@ -86,5 +86,8 @@ function decelerate(speed) {
 }
 
 function bounce(speed) {
-  return -Math.floor(speed / 2);
+  if (speed > 0) {
+    return -Math.floor(speed / 5);
+  }
+  return -Math.ceil(speed / 5);
 }
