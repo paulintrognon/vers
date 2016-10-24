@@ -2,6 +2,8 @@ export default {
   createObject
 };
 
+const _ = require('lodash');
+
 function createObject(specs) {
   const world = specs.world;
   const name = specs.name;
@@ -29,17 +31,25 @@ function createObject(specs) {
   }
 
   function move() {
-    moveAxis('x');
-    moveAxis('y');
+    const objectA = _.cloneDeep(that);
 
-    const object = checkCollisions();
+    objectA.position.x = moveAxis('x');
+    objectA.position.y = moveAxis('y');
 
-    if (object) {
-      
+    const objectB = checkCollisions(objectA);
+
+    if (!objectB) {
+      position.x = moveAxis('x');
+      position.y = moveAxis('y');
+      speed.x = decelerate(speed.x);
+      speed.y = decelerate(speed.y);
+    } else {
+      speed.x = 0;
+      speed.y = 0;
     }
   }
 
-  checkCollision(object1, object2) {
+  function checkCollision(object1, object2) {
     return !(
       (object2.position.x >= object1.position.x + object1.size.x)
        || (object2.position.x + object2.size.x <= object1.position.x)
@@ -48,23 +58,23 @@ function createObject(specs) {
     );
   }
 
-  function checkCollisions() {
-    return world.objects.find(object => {
-      if (name === object.name) {
+  function checkCollisions(objectA) {
+    return world.objects.find(objectB => {
+      if (name === objectB.name) {
         return false;
       }
-      if (checkCollision(that, object)) {
+      if (!checkCollision(objectA, objectB)) {
         return false;
       }
-      return object;
+      return objectB;
     });
   }
 
   function moveAxis(axis) {
     if (speed[axis] === 0) {
-      return;
+      return position[axis];
     }
-    position[axis] = position[axis] += speed[axis];
+    return position[axis] + speed[axis];
   }
 }
 
@@ -77,9 +87,4 @@ function decelerate(speed) {
 
 function bounce(speed) {
   return -Math.floor(speed / 2);
-}
-
-function isCollisionAxis(axis, objectA, objectB) {
-  return (objectA.position[axis] + objectA.size[axis]) > objectB.position[axis]
-    && (objectA.position[axis]) < (objectB.position[axis] + objectB.size[axis]);
 }
