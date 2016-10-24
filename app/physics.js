@@ -39,6 +39,7 @@ function createObject(specs) {
     const objectB = checkCollisions(objectA);
 
     if (objectB) {
+      moveObjectUntilCollision(that, objectB);
       speed.x = bounce(speed.x);
       speed.y = bounce(speed.y);
     } else {
@@ -49,13 +50,36 @@ function createObject(specs) {
     }
   }
 
-  function checkCollision(object1, object2) {
+  function checkCollision(objectA, objectB) {
     return !(
-      (object2.position.x >= object1.position.x + object1.size.x)
-       || (object2.position.x + object2.size.x <= object1.position.x)
-       || (object2.position.y >= object1.position.y + object1.size.y)
-       || (object2.position.y + object2.size.y <= object1.position.y)
+      (objectB.position.x >= objectA.position.x + objectA.size.x)
+       || (objectB.position.x + objectB.size.x <= objectA.position.x)
+       || (objectB.position.y >= objectA.position.y + objectA.size.y)
+       || (objectB.position.y + objectB.size.y <= objectA.position.y)
     );
+  }
+
+  function moveObjectUntilCollision(objectA, objectB) {
+    const ghost = _.cloneDeep(objectA);
+    let collision = true;
+    while (collision) {
+      if (ghost.speed.x > 0 && ghost.position.x+1 < ghost.position.x+speed.x) {
+        ghost.position.x++;
+      } else if (ghost.speed.x < 0 && ghost.position.x-1 > ghost.position.x+speed.x) {
+        ghost.position.x--;
+      }
+      if (ghost.speed.y > 0 && ghost.position.y+1 < ghost.position.y+speed.y) {
+        ghost.position.y++;
+      } else if (ghost.speed.y < 0 && ghost.position.y-1 > ghost.position.y+speed.y) {
+        ghost.position.y--;
+      }
+      if (checkCollision(ghost, objectB)) {
+        collision = false;
+      } else {
+        position.x = ghost.position.x;
+        position.y = ghost.position.y;
+      }
+    }
   }
 
   function checkCollisions(objectA) {
